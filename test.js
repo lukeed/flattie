@@ -1,20 +1,11 @@
 /* eslint camelcase:0 */
 
 import test from 'ava';
+import {fix1, fix2, fix3} from './fixtures';
 import fn from './';
 
-const fixture = {
-	a: 'hello',
-	b: 'there',
-	c: {
-		breeze: 'sea',
-		saw: 'see'
-	},
-	d: 'end'
-};
-
 test('default behavior', t => {
-	t.deepEqual(fn(fixture), {
+	t.deepEqual(fn(fix1), {
 		a: 'hello',
 		b: 'there',
 		c_breeze: 'sea',
@@ -24,7 +15,7 @@ test('default behavior', t => {
 });
 
 test('custom glue', t => {
-	t.deepEqual(fn(fixture, 'HI'), {
+	t.deepEqual(fn(fix1, 'HI'), {
 		a: 'hello',
 		b: 'there',
 		cHIbreeze: 'sea',
@@ -34,30 +25,14 @@ test('custom glue', t => {
 });
 
 test('ignore empty values', t => {
-	const fix = {
+	t.deepEqual(fn(fix2), {
 		a: 'hi',
-		b: {
-			a: null, b: undefined, c: '', d: 'hi'
-		},
-		c: null
-	};
-	t.deepEqual(fn(fix), {a: 'hi', b_d: 'hi'});
+		b_d: 'hi'
+	});
 });
 
 test('multi-nested flattening', t => {
-	const fix = {
-		a: 'hi',
-		b: {
-			a: 'hi',
-			b: 'yo',
-			c: {
-				a: 'howdy',
-				b: 'hello'
-			}
-		},
-		c: 'sup'
-	};
-	t.deepEqual(fn(fix), {
+	t.deepEqual(fn(fix3), {
 		a: 'hi',
 		b_a: 'hi',
 		b_b: 'yo',
