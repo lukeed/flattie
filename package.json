@@ -19,7 +19,10 @@
     "index.js"
   ],
   "keywords": [
-    ""
+    "flatten",
+    "object",
+    "nested",
+    "flat"
   ],
   "dependencies": {},
   "devDependencies": {
