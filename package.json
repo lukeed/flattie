@@ -1,6 +1,6 @@
 {
   "name": "flat-obj",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "Flatten a multi-dimensional Object into an Object of single depth",
   "license": "MIT",
   "repository": "lukeed/flat-obj",
