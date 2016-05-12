@@ -1,0 +1,30 @@
+{
+  "name": "flat-obj",
+  "version": "0.0.0",
+  "description": "My kryptonian module",
+  "license": "MIT",
+  "repository": "lukeed/flat-obj",
+  "author": {
+    "name": "Luke Edwards",
+    "email": "luke.edwards05@gmail.com",
+    "url": "lukeed.com"
+  },
+  "engines": {
+    "node": ">=0.10.0"
+  },
+  "scripts": {
+    "test": "xo && nyc ava"
+  },
+  "files": [
+    "index.js"
+  ],
+  "keywords": [
+    ""
+  ],
+  "dependencies": {},
+  "devDependencies": {
+    "ava": "^0.14.0",
+    "xo": "^0.14.0",
+    "nyc": "^6.4.0"
+  }
+}
