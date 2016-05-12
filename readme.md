@@ -1,6 +1,6 @@
 # flat-obj [![Build Status](https://travis-ci.org/lukeed/flat-obj.svg?branch=master)](https://travis-ci.org/lukeed/flat-obj)
 
-> My kryptonian module
+> Flatten a multi-dimensional Object into an Object of single depth.
 
 
 ## Install
@@ -15,31 +15,47 @@ $ npm install --save flat-obj
 ```js
 const flatObj = require('flat-obj');
 
-flatObj('unicorns');
-//=> 'unicorns & rainbows'
+flatObj({
+  a: 'hi',
+  b: {
+    a: null,
+    b: undefined,
+    c: '',
+    d: 'hello',
+    e: {
+      a: 'yo',
+      b: 'sup'
+    }
+  },
+  c: 'world'
+});
+//=> {a: 'hi', b_d: 'hello', b_e_a: 'yo', b_e_b: 'sup', c: 'world'}
 ```
 
+> **Note:** `null`, `undefined`, and `''` values are purged.
 
 ## API
 
-### flatObj(input, [options])
+### flatObj(obj, [glue])
 
-#### input
+#### obj
 
-Type: `string`
+Type: `object`
 
-Lorem ipsum.
+The object to flatten.
 
-#### options
+#### glue
 
-##### foo
+Type: `string`<br>
+Default: `_`
 
-Type: `boolean`<br>
-Default: `false`
+The delimiter for joining parent keys to their children's names.
 
-Lorem ipsum.
+```javascript
+{a: {b: 'hello', c: 'world'}} //=> {a_b: 'hello', a_c: 'world'}
+```
 
 
 ## License
 
-MIT © [luke](https://lukeed.com)
+MIT © [Luke Edwards](https://lukeed.com)

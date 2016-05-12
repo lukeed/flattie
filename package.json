@@ -1,7 +1,7 @@
 {
   "name": "flat-obj",
   "version": "0.0.0",
-  "description": "My kryptonian module",
+  "description": "Flatten a multi-dimensional Object into an Object of single depth",
   "license": "MIT",
   "repository": "lukeed/flat-obj",
   "author": {
