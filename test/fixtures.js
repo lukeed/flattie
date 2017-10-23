@@ -1,4 +1,4 @@
-exports.fix1 = {
+exports.foo = {
 	a: 'hello',
 	b: 'there',
 	c: {
@@ -8,7 +8,7 @@ exports.fix1 = {
 	d: 'end'
 };
 
-exports.fix2 = {
+exports.bar = {
 	a: 'hi',
 	b: {
 		a: null,
@@ -19,7 +19,7 @@ exports.fix2 = {
 	c: null
 };
 
-exports.fix3 = {
+exports.baz = {
 	a: 'hi',
 	b: {
 		a: 'hi',
