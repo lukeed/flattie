@@ -1,8 +1,7 @@
 {
   "name": "flat-obj",
   "version": "1.0.0",
-  "description": "Flatten a multi-dimensional Object into an Object of single depth",
-  "license": "MIT",
+  "description": "Flatten a nested Object with customizable glue",
   "repository": "lukeed/flat-obj",
   "main": "lib/index.js",
   "license": "MIT",

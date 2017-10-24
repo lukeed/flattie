@@ -1,6 +1,6 @@
 # flat-obj [![Build Status](https://travis-ci.org/lukeed/flat-obj.svg?branch=master)](https://travis-ci.org/lukeed/flat-obj)
 
-> Flatten a multi-dimensional Object into an Object of single depth.
+> Flatten a nested Object with customizable glue
 
 
 ## Install
