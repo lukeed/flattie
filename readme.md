@@ -19,20 +19,21 @@ flatObj({
   a: 'hi',
   b: {
     a: null,
-    b: undefined,
-    c: '',
+    b: '',
     d: 'hello',
     e: {
       a: 'yo',
-      b: 'sup'
+      b: undefined,
+      c: 'sup',
+      d: 0
     }
   },
   c: 'world'
 });
-//=> {a: 'hi', b_d: 'hello', b_e_a: 'yo', b_e_b: 'sup', c: 'world'}
+//=> { a:'hi', b_b:'', b_d:'hello', b_e_a:'yo', b_e_c:'sup', b_e_d:0, c:'world' }
 ```
 
-> **Note:** `null`, `undefined`, and `''` values are purged.
+> **Note:** `null` and `undefined` values are purged.
 
 ## API
 
@@ -40,19 +41,23 @@ flatObj({
 
 #### obj
 
-Type: `object`
+Type: `Object`
 
 The object to flatten.
 
 #### glue
 
-Type: `string`<br>
+Type: `String`<br>
 Default: `_`
 
-The delimiter for joining parent keys to their children's names.
+A string used to join parent key names to nested child key names.
 
-```javascript
-{a: {b: 'hello', c: 'world'}} //=> {a_b: 'hello', a_c: 'world'}
+```js
+{
+  foo: {
+    bar: 123
+  }
+} //=> { foo_bar:123 }
 ```
 
 
