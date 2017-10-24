@@ -56,6 +56,20 @@ The delimiter for joining parent keys to their children's names.
 ```
 
 
+## Benchmarks
+
+```
+flat-obj (current)
+  --> 540,089 ops/sec ±0.65% (83 runs sampled)
+flat-obj (1.0.0)
+  --> 511,842 ops/sec ±0.62% (91 runs sampled)
+flat
+  --> 140,012 ops/sec ±0.59% (96 runs sampled)
+flatten-object
+  --> 154,127 ops/sec ±0.78% (93 runs sampled)
+```
+
+
 ## License
 
 MIT © [Luke Edwards](https://lukeed.com)

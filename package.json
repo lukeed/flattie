@@ -18,6 +18,7 @@
     "node": ">= 4"
   },
   "scripts": {
+    "bench": "node bench",
     "test": " tape test/*.js | tap-spec"
   },
   "keywords": [
