@@ -30,10 +30,10 @@ flatObj({
   },
   c: 'world'
 });
-//=> { a:'hi', b_b:'', b_d:'hello', b_e_a:'yo', b_e_c:'sup', b_e_d:0, c:'world' }
+//=> { a:'hi', b_a: null, b_b:'', b_d:'hello', b_e_a:'yo', b_e_c:'sup', b_e_d:0, c:'world' }
 ```
 
-> **Note:** `null` and `undefined` values are purged.
+> **Note:** `undefined` values are purged.
 
 ## API
 
