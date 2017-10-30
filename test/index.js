@@ -39,3 +39,33 @@ test('multi-nested flattening', t => {
 	t.deepEqual(val, { a:1, b_a:2, b_b:3, b_c_a:4, b_c_c:5, c:6 });
 	t.end();
 });
+
+test('with array keys', t => {
+	let val = fn({
+		a: 1,
+		b: [
+			{ a:1, b:2, c:{ a:1, b:2 }, d:4 },
+			{ a:2, b:4, c:{ a:2, b:4 }, d:5 },
+			{ a:3, b:6, c:{ a:4, b:8 }, d:6 }
+		],
+		c: 3,
+		d: [
+			{ a:1, b:2, c:[{ a:1, b:{ c:3 } }, { a:2, b:{ c:4 } }], d:4 },
+			{ a:2, b:3, c:[{ a:2, b:{ c:4 } }, { a:3, b:{ c:5 } }], d:5 },
+		]
+	});
+	t.deepEqual(val, {
+		a: 1,
+		b: [
+			{ a:1, b:2, c_a:1, c_b:2, d:4 },
+			{ a:2, b:4, c_a:2, c_b:4, d:5 },
+			{ a:3, b:6, c_a:4, c_b:8, d:6 },
+		],
+		c: 3,
+		d: [
+			{ a:1, b:2, c:[{ a:1, b_c:3 }, { a:2, b_c:4 }], d:4 },
+			{ a:2, b:3, c:[{ a:2, b_c:4 }, { a:3, b_c:5 }], d:5 }
+		]
+	});
+	t.end();
+});
