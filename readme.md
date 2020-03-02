@@ -96,10 +96,10 @@ Validation:
   ✔ flat-obj
 
 Benchmark:
-  flat               x 187,778 ops/sec ±1.27% (87 runs sampled)
-  flatten-object     x 191,514 ops/sec ±0.26% (93 runs sampled)
-  flat-obj@1.x       x 268,060 ops/sec ±1.21% (94 runs sampled)
-  flat-obj           x 622,744 ops/sec ±0.33% (92 runs sampled)
+  flat               x 186,002 ops/sec ±1.28% (89 runs sampled)
+  flatten-object     x 188,715 ops/sec ±0.22% (94 runs sampled)
+  flat-obj@1.x       x 274,414 ops/sec ±1.03% (95 runs sampled)
+  flat-obj           x 363,332 ops/sec ±0.57% (97 runs sampled)
 ```
 
 
