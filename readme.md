@@ -13,7 +13,7 @@ $ npm install --save flat-obj
 ## Usage
 
 ```js
-const flatObj = require('flat-obj');
+import flatObj from 'flat-obj';
 
 flatObj({
   a: 'hi',
@@ -40,38 +40,40 @@ flatObj({
 ### flatObj(obj, [glue])
 
 #### obj
-
 Type: `Object`
 
 The object to flatten.
 
 #### glue
-
 Type: `String`<br>
 Default: `_`
 
 A string used to join parent key names to nested child key names.
 
 ```js
-{
-  foo: {
-    bar: 123
-  }
-} //=> { foo_bar:123 }
+const foo = { bar: 123 };
+
+flatObj({ foo }); //=> { foo_bar: 123 }
+flatObj({ foo }, '.'); //=> { 'foo.bar': 123 }
 ```
 
 
 ## Benchmarks
 
+> Running on Node.js v10.13.0
+
 ```
-flat-obj (current)
-  --> 540,089 ops/sec ±0.65% (83 runs sampled)
-flat-obj (1.0.0)
-  --> 511,842 ops/sec ±0.62% (91 runs sampled)
-flat
-  --> 140,012 ops/sec ±0.59% (96 runs sampled)
-flatten-object
-  --> 154,127 ops/sec ±0.78% (93 runs sampled)
+Validation:
+  ✔ flat
+  ✔ flatten-object
+  ✔ flat-obj@1.x
+  ✔ flat-obj
+
+Benchmark:
+  flat               x 187,778 ops/sec ±1.27% (87 runs sampled)
+  flatten-object     x 191,514 ops/sec ±0.26% (93 runs sampled)
+  flat-obj@1.x       x 268,060 ops/sec ±1.21% (94 runs sampled)
+  flat-obj           x 622,744 ops/sec ±0.33% (92 runs sampled)
 ```
 
 
