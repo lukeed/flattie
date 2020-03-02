@@ -2,19 +2,27 @@ export default function flatten(obj, sep) {
 	var k, v, j, tmp, out={};
 	sep = sep || '_';
 
-	for (k in obj) {
-		v = obj[k];
-		if (v == null) {
-			continue;
-		} else if (Array.isArray(v)) {
-			out[k] = v.map(o => flatten(o, sep));
-		} else if (typeof v === 'object') {
-			tmp = flatten(v, sep);
-			for (j in tmp) {
-				out[k + sep + j] = tmp[j];
+	if (Array.isArray(obj)) {
+		for (k=0; k < obj.length; k++) {
+			v = obj[k];
+			if (v == null) {
+			} else if (typeof v == 'object') {
+				tmp = flatten(v, sep);
+				for (j in tmp) out[k + sep + j] = tmp[j];
+			} else {
+				out[k] = v;
 			}
-		} else {
-			out[k] = v;
+		}
+	} else if (typeof obj == 'object') {
+		for (k in obj) {
+			v = obj[k];
+			if (v == null) {
+			} else if (typeof v == 'object') {
+				tmp = flatten(v, sep);
+				for (j in tmp) out[k + sep + j] = tmp[j];
+			} else {
+				out[k] = v;
+			}
 		}
 	}
 

@@ -1,2 +1,1 @@
-type Object = Record<string, any>;
-export default function<X=Object, Y=Object>(input: Y, glue?: string): X;
+export default function<X=Record<string, any>, Y=unknown>(input: Y, glue?: string): X;

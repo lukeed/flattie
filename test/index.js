@@ -1,71 +1,461 @@
 import test from 'tape';
 import flat from '../src';
 
-test('flat-obj', t => {
+test('exports', t => {
 	t.is(typeof flat, 'function', 'exports a function');
 	t.end();
 });
 
-test('simple', t => {
-	let c = { foo:'bar', baz:'bat' };
-	let val = flat({ a:1, b:2, c, d:4 });
-	t.deepEqual(val, { a:1, b:2, c_foo:'bar', c_baz:'bat', d:4 });
-	t.end();
-});
 
 test('custom glue', t => {
-	let c = { x:7, y:8, z:9 };
-	let val = flat({ a:1, b:4, c, d:5 }, 'FOO');
-	t.deepEqual(val, { a:1, b:4, cFOOx:7, cFOOy:8, cFOOz:9, d:5 });
+	let ccc = { foo: 'bar', baz: 'bat' };
+	let input = { aaa: 1, bbb: 2, ccc, ddd: 4 };
+
+	t.deepEqual(
+		flat(input, 'FOO'), {
+			aaa: 1,
+			bbb: 2,
+			cccFOOfoo: 'bar',
+			cccFOObaz: 'bat',
+			ddd: 4
+		}
+	);
+
+	t.deepEqual(
+		flat(input, '~'), {
+			'aaa': 1,
+			'bbb': 2,
+			'ccc~foo': 'bar',
+			'ccc~baz': 'bat',
+			'ddd': 4
+		}
+	);
+
 	t.end();
 });
 
-test('ignore empty values', t => {
-	let val = flat({
-		a: 123,
-		b: { a:null, b:undefined, c:'', d:0, e:'hi' },
-		c: null
-	});
-	t.deepEqual(val, { a:123, b_c:'', b_d:0, b_e:'hi' }, 'keeps 0 and empty string');
+
+test('ignore nullish', t => {
+	let ddd = [, null, undefined, 0, 1];
+	let bbb = { aaa: null, bbb: undefined, ccc: '', ddd: 'hi', eee: 0 };
+	let input = { aaa: 123, bbb, ccc: null, ddd };
+
+	t.deepEqual(
+		flat(input), {
+			aaa: 123,
+			bbb_ccc: '',
+			bbb_ddd: 'hi',
+			bbb_eee: 0,
+			ddd_3: 0,
+			ddd_4: 1,
+		}
+	);
+
 	t.end();
 });
 
-test('multi-nested flattening', t => {
-	let val = flat({
-		a: 1,
-		b: { a:2, b:3, c:{ a:4, b:null, c:5 } },
-		c: 6
-	});
-	t.deepEqual(val, { a:1, b_a:2, b_b:3, b_c_a:4, b_c_c:5, c:6 });
+
+test('plain types', t => {
+	t.deepEqual(flat(1), {});
+	t.deepEqual(flat(0), {});
+
+	t.deepEqual(flat(null), {});
+	t.deepEqual(flat(undefined), {});
+
+	t.deepEqual(flat(''), {});
+	t.deepEqual(flat('hello'), {});
+
 	t.end();
 });
 
-test('with array keys', t => {
-	let val = flat({
+
+test('object :: simple', t => {
+	let ccc = { foo: 'bar', baz: 'bat' };
+	let input = { aaa: 1, bbb: 2, ccc, ddd: 4 };
+	let input_string = JSON.stringify(input);
+
+	t.deepEqual(
+		flat(input), {
+			aaa: 1,
+			bbb: 2,
+			ccc_foo: 'bar',
+			ccc_baz: 'bat',
+			ddd: 4
+		}
+	);
+
+	t.deepEqual(
+		input_string,
+		JSON.stringify(input)
+	);
+
+	t.end();
+});
+
+
+test('object :: nested', t => {
+	let ccc = { foo: 'bar', baz: 'bat' };
+	let bbb = { aaa: 2, bbb: 3, ccc, ddd: 4 }
+	let input = { aaa: 1, bbb, ccc: 3 };
+
+	let input_string = JSON.stringify(input);
+
+	t.deepEqual(
+		flat(input), {
+			aaa: 1,
+			bbb_aaa: 2,
+			bbb_bbb: 3,
+			bbb_ccc_foo: 'bar',
+			bbb_ccc_baz: 'bat',
+			bbb_ddd: 4,
+			ccc: 3
+		}
+	);
+
+	t.deepEqual(
+		input_string,
+		JSON.stringify(input)
+	);
+
+	t.end();
+});
+
+
+
+test('object :: kitchen', t => {
+	let input = {
 		a: 1,
 		b: [
-			{ a:1, b:2, c:{ a:1, b:2 }, d:4 },
-			{ a:2, b:4, c:{ a:2, b:4 }, d:5 },
-			{ a:3, b:6, c:{ a:4, b:8 }, d:6 }
+			[{ a:1, b:[2,null,9], c:{ a:[1], b: { foo: [2, 2] } }, d:4 }],
+			[{ a:2, b:[4,null,9], c:{ a:[2], b: { foo: [4, 4] } }, d:5 }],
+			[{ a:3, b:[6,null,9], c:{ a:[4], b: { foo: [8, 8] } }, d:6 }],
 		],
 		c: 3,
-		d: [
-			{ a:1, b:2, c:[{ a:1, b:{ c:3 } }, { a:2, b:{ c:4 } }], d:4 },
-			{ a:2, b:3, c:[{ a:2, b:{ c:4 } }, { a:3, b:{ c:5 } }], d:5 },
-		]
-	});
-	t.deepEqual(val, {
-		a: 1,
-		b: [
-			{ a:1, b:2, c_a:1, c_b:2, d:4 },
-			{ a:2, b:4, c_a:2, c_b:4, d:5 },
-			{ a:3, b:6, c_a:4, c_b:8, d:6 },
-		],
-		c: 3,
-		d: [
-			{ a:1, b:2, c:[{ a:1, b_c:3 }, { a:2, b_c:4 }], d:4 },
-			{ a:2, b:3, c:[{ a:2, b_c:4 }, { a:3, b_c:5 }], d:5 }
-		]
-	});
+		d: {
+			foo: undefined,
+			bar: [{ a:1, b:2, c:[{ a:1, b:{ c:3 } }, { a:2, b:{ c:4 } }], d:4 }],
+			baz: [{ a:2, b:3, c:[{ a:2, b:{ c:4 } }, { a:3, b:{ c:5 } }], d:5 }],
+		}
+	};
+
+	let input_string = JSON.stringify(input);
+
+	t.deepEqual(
+		flat(input), {
+			a: 1,
+
+			b_0_0_a: 1,
+			b_0_0_b_0: 2,
+			b_0_0_b_2: 9,
+			b_0_0_c_a_0: 1,
+			b_0_0_c_b_foo_0: 2,
+			b_0_0_c_b_foo_1: 2,
+			b_0_0_d: 4,
+
+			b_1_0_a: 2,
+			b_1_0_b_0: 4,
+			b_1_0_b_2: 9,
+			b_1_0_c_a_0: 2,
+			b_1_0_c_b_foo_0: 4,
+			b_1_0_c_b_foo_1: 4,
+			b_1_0_d: 5,
+
+			b_2_0_a: 3,
+			b_2_0_b_0: 6,
+			b_2_0_b_2: 9,
+			b_2_0_c_a_0: 4,
+			b_2_0_c_b_foo_0: 8,
+			b_2_0_c_b_foo_1: 8,
+			b_2_0_d: 6,
+
+			c: 3,
+
+			d_bar_0_a: 1,
+			d_bar_0_b: 2,
+			d_bar_0_c_0_a: 1,
+			d_bar_0_c_0_b_c: 3,
+			d_bar_0_c_1_a: 2,
+			d_bar_0_c_1_b_c: 4,
+			d_bar_0_d: 4,
+
+			d_baz_0_a: 2,
+			d_baz_0_b: 3,
+			d_baz_0_c_0_a: 2,
+			d_baz_0_c_0_b_c: 4,
+			d_baz_0_c_1_a: 3,
+			d_baz_0_c_1_b_c: 5,
+			d_baz_0_d: 5,
+		}
+	);
+
+	t.deepEqual(
+		input_string,
+		JSON.stringify(input),
+		'~> no input mutation'
+	);
+
+	t.end();
+});
+
+
+test('array :: simple', t => {
+	const input = [0, , null, undefined, 1, 2, '', 3];
+	const input_string = JSON.stringify(input);
+
+	t.deepEqual(
+		flat(input), {
+			0: 0,
+			4: 1,
+			5: 2,
+			6: '',
+			7: 3
+		}
+	);
+
+	t.deepEqual(
+		input_string,
+		JSON.stringify(input),
+		'~> no input mutation'
+	);
+
+	t.end();
+});
+
+
+test('array :: nested', t => {
+	const input = [
+		[1, 2, null, 3, 4],
+		['foo', 'bar', ['hello', null, 'world'], 'baz'],
+		[6, 7, 8, undefined, 9]
+	];
+
+	const input_string = JSON.stringify(input);
+
+	t.deepEqual(
+		flat(input), {
+			'0_0': 1,
+			'0_1': 2,
+			'0_3': 3,
+			'0_4': 4,
+			'1_0': 'foo',
+			'1_1': 'bar',
+			'1_2_0': 'hello',
+			'1_2_2': 'world',
+			'1_3': 'baz',
+			'2_0': 6,
+			'2_1': 7,
+			'2_2': 8,
+			'2_4': 9,
+		}
+	);
+
+	t.deepEqual(
+		input_string,
+		JSON.stringify(input),
+		'~> no input mutation'
+	);
+
+	t.end();
+});
+
+
+test('array :: object', t => {
+	let baz = ['hello', null, 'world'];
+	let bbb = { foo: 123, bar: 456, baz };
+
+	let input = [
+		{ aaa: 1, bbb, ccc: [4, 5] },
+		{ aaa: 2, bbb, ccc: [null] },
+		{ aaa: 3, bbb, ccc: [9999] },
+	];
+
+	let input_string = JSON.stringify(input);
+
+	t.deepEqual(
+		flat(input), {
+			'0_aaa': 1,
+			'0_bbb_foo': 123,
+			'0_bbb_bar': 456,
+			'0_bbb_baz_0': 'hello',
+			'0_bbb_baz_2': 'world',
+			'0_ccc_0': 4,
+			'0_ccc_1': 5,
+
+			'1_aaa': 2,
+			'1_bbb_foo': 123,
+			'1_bbb_bar': 456,
+			'1_bbb_baz_0': 'hello',
+			'1_bbb_baz_2': 'world',
+
+			'2_aaa': 3,
+			'2_bbb_foo': 123,
+			'2_bbb_bar': 456,
+			'2_bbb_baz_0': 'hello',
+			'2_bbb_baz_2': 'world',
+			'2_ccc_0': 9999,
+		}
+	);
+
+	t.deepEqual(
+		flat(input, '.'), {
+			'0.aaa': 1,
+			'0.bbb.foo': 123,
+			'0.bbb.bar': 456,
+			'0.bbb.baz.0': 'hello',
+			'0.bbb.baz.2': 'world',
+			'0.ccc.0': 4,
+			'0.ccc.1': 5,
+
+			'1.aaa': 2,
+			'1.bbb.foo': 123,
+			'1.bbb.bar': 456,
+			'1.bbb.baz.0': 'hello',
+			'1.bbb.baz.2': 'world',
+
+			'2.aaa': 3,
+			'2.bbb.foo': 123,
+			'2.bbb.bar': 456,
+			'2.bbb.baz.0': 'hello',
+			'2.bbb.baz.2': 'world',
+			'2.ccc.0': 9999,
+		}
+	);
+
+	t.deepEqual(
+		input_string,
+		JSON.stringify(input),
+		'~> no input mutation'
+	);
+
+	t.end();
+});
+
+
+test('array :: kitchen', t => {
+	let input = [
+		'hello',
+		{
+			a: 1,
+			b: [
+				[{ a:1, b:[2,null,9], c:{ a:[1], b: { foo: [2, 2] } }, d:4 }],
+				[{ a:2, b:[4,null,9], c:{ a:[2], b: { foo: [4, 4] } }, d:5 }],
+				[{ a:3, b:[6,null,9], c:{ a:[4], b: { foo: [8, 8] } }, d:6 }],
+			],
+			c: 3,
+			d: {
+				foo: undefined,
+				bar: [{ a:1, b:2, c:[{ a:1, b:{ c:3 } }, { a:2, b:{ c:4 } }], d:4 }],
+				baz: [{ a:2, b:3, c:[{ a:2, b:{ c:4 } }, { a:3, b:{ c:5 } }], d:5 }],
+			}
+		},
+		'world',
+		{
+			a: 1,
+			b: [
+				[{ a:1, b:[2,null,9], c:{ a:[1], b: { foo: [2, 2] } }, d:4 }],
+				[{ a:2, b:[4,null,9], c:{ a:[2], b: { foo: [4, 4] } }, d:5 }],
+				[{ a:3, b:[6,null,9], c:{ a:[4], b: { foo: [8, 8] } }, d:6 }],
+			],
+			c: 3,
+			d: {
+				foo: undefined,
+				bar: [{ a:1, b:2, c:[{ a:1, b:{ c:3 } }, { a:2, b:{ c:4 } }], d:4 }],
+				baz: [{ a:2, b:3, c:[{ a:2, b:{ c:4 } }, { a:3, b:{ c:5 } }], d:5 }],
+			}
+		},
+	];
+
+	let input_string = JSON.stringify(input);
+
+	t.deepEqual(
+		flat(input), {
+			'0': 'hello',
+
+			'1_a': 1,
+			'1_b_0_0_a': 1,
+			'1_b_0_0_b_0': 2,
+			'1_b_0_0_b_2': 9,
+			'1_b_0_0_c_a_0': 1,
+			'1_b_0_0_c_b_foo_0': 2,
+			'1_b_0_0_c_b_foo_1': 2,
+			'1_b_0_0_d': 4,
+			'1_b_1_0_a': 2,
+			'1_b_1_0_b_0': 4,
+			'1_b_1_0_b_2': 9,
+			'1_b_1_0_c_a_0': 2,
+			'1_b_1_0_c_b_foo_0': 4,
+			'1_b_1_0_c_b_foo_1': 4,
+			'1_b_1_0_d': 5,
+			'1_b_2_0_a': 3,
+			'1_b_2_0_b_0': 6,
+			'1_b_2_0_b_2': 9,
+			'1_b_2_0_c_a_0': 4,
+			'1_b_2_0_c_b_foo_0': 8,
+			'1_b_2_0_c_b_foo_1': 8,
+			'1_b_2_0_d': 6,
+			'1_c': 3,
+			'1_d_bar_0_a': 1,
+			'1_d_bar_0_b': 2,
+			'1_d_bar_0_c_0_a': 1,
+			'1_d_bar_0_c_0_b_c': 3,
+			'1_d_bar_0_c_1_a': 2,
+			'1_d_bar_0_c_1_b_c': 4,
+			'1_d_bar_0_d': 4,
+			'1_d_baz_0_a': 2,
+			'1_d_baz_0_b': 3,
+			'1_d_baz_0_c_0_a': 2,
+			'1_d_baz_0_c_0_b_c': 4,
+			'1_d_baz_0_c_1_a': 3,
+			'1_d_baz_0_c_1_b_c': 5,
+			'1_d_baz_0_d': 5,
+
+			'2': 'world',
+
+			'3_a': 1,
+			'3_b_0_0_a': 1,
+			'3_b_0_0_b_0': 2,
+			'3_b_0_0_b_2': 9,
+			'3_b_0_0_c_a_0': 1,
+			'3_b_0_0_c_b_foo_0': 2,
+			'3_b_0_0_c_b_foo_1': 2,
+			'3_b_0_0_d': 4,
+			'3_b_1_0_a': 2,
+			'3_b_1_0_b_0': 4,
+			'3_b_1_0_b_2': 9,
+			'3_b_1_0_c_a_0': 2,
+			'3_b_1_0_c_b_foo_0': 4,
+			'3_b_1_0_c_b_foo_1': 4,
+			'3_b_1_0_d': 5,
+			'3_b_2_0_a': 3,
+			'3_b_2_0_b_0': 6,
+			'3_b_2_0_b_2': 9,
+			'3_b_2_0_c_a_0': 4,
+			'3_b_2_0_c_b_foo_0': 8,
+			'3_b_2_0_c_b_foo_1': 8,
+			'3_b_2_0_d': 6,
+			'3_c': 3,
+			'3_d_bar_0_a': 1,
+			'3_d_bar_0_b': 2,
+			'3_d_bar_0_c_0_a': 1,
+			'3_d_bar_0_c_0_b_c': 3,
+			'3_d_bar_0_c_1_a': 2,
+			'3_d_bar_0_c_1_b_c': 4,
+			'3_d_bar_0_d': 4,
+			'3_d_baz_0_a': 2,
+			'3_d_baz_0_b': 3,
+			'3_d_baz_0_c_0_a': 2,
+			'3_d_baz_0_c_0_b_c': 4,
+			'3_d_baz_0_c_1_a': 3,
+			'3_d_baz_0_c_1_b_c': 5,
+			'3_d_baz_0_d': 5,
+		}
+	);
+
+	t.deepEqual(
+		input_string,
+		JSON.stringify(input),
+		'~> no input mutation'
+	);
+
 	t.end();
 });
