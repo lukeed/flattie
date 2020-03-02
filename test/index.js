@@ -1,27 +1,27 @@
-const test = require('tape');
-const fn = require('../lib');
+import test from 'tape';
+import flat from '../src';
 
 test('flat-obj', t => {
-	t.is(typeof fn, 'function', 'exports a function');
+	t.is(typeof flat, 'function', 'exports a function');
 	t.end();
 });
 
 test('simple', t => {
 	let c = { foo:'bar', baz:'bat' };
-	let val = fn({ a:1, b:2, c, d:4 });
+	let val = flat({ a:1, b:2, c, d:4 });
 	t.deepEqual(val, { a:1, b:2, c_foo:'bar', c_baz:'bat', d:4 });
 	t.end();
 });
 
 test('custom glue', t => {
 	let c = { x:7, y:8, z:9 };
-	let val = fn({ a:1, b:4, c, d:5 }, 'FOO');
+	let val = flat({ a:1, b:4, c, d:5 }, 'FOO');
 	t.deepEqual(val, { a:1, b:4, cFOOx:7, cFOOy:8, cFOOz:9, d:5 });
 	t.end();
 });
 
 test('ignore empty values', t => {
-	let val = fn({
+	let val = flat({
 		a: 123,
 		b: { a:null, b:undefined, c:'', d:0, e:'hi' },
 		c: null
@@ -31,7 +31,7 @@ test('ignore empty values', t => {
 });
 
 test('multi-nested flattening', t => {
-	let val = fn({
+	let val = flat({
 		a: 1,
 		b: { a:2, b:3, c:{ a:4, b:null, c:5 } },
 		c: 6
@@ -41,7 +41,7 @@ test('multi-nested flattening', t => {
 });
 
 test('with array keys', t => {
-	let val = fn({
+	let val = flat({
 		a: 1,
 		b: [
 			{ a:1, b:2, c:{ a:1, b:2 }, d:4 },

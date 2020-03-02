@@ -1,24 +1,29 @@
 {
   "name": "flat-obj",
   "version": "2.1.0",
-  "description": "Flatten a nested Object with customizable glue",
   "repository": "lukeed/flat-obj",
-  "main": "lib/index.js",
+  "description": "A tiny (173B) utility to flatten an object with customizable glue",
+  "unpkg": "dist/index.min.js",
+  "module": "dist/index.mjs",
+  "main": "dist/index.js",
+  "types": "flat.d.ts",
   "license": "MIT",
-  "files": [
-    "lib"
-  ],
   "author": {
     "name": "Luke Edwards",
     "email": "luke.edwards05@gmail.com",
-    "url": "lukeed.com"
+    "url": "https://lukeed.com"
   },
+  "files": [
+    "*.d.ts",
+    "dist"
+  ],
   "engines": {
     "node": ">= 4"
   },
   "scripts": {
+    "build": "bundt",
     "bench": "node bench",
-    "test": " tape test/*.js | tap-spec"
+    "test": "tape -r esm test/*.js | tap-spec"
   },
   "keywords": [
     "flatten",
@@ -27,7 +32,9 @@
     "flat"
   ],
   "devDependencies": {
-    "tap-spec": "^4.1.1",
-    "tape": "^4.8.0"
+    "bundt": "1.0.0",
+    "esm": "3.2.25",
+    "tap-spec": "5.0.0",
+    "tape": "4.13.0"
   }
 }

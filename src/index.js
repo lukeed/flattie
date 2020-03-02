@@ -1,4 +1,4 @@
-function flatObj(obj, sep) {
+export default function flatten(obj, sep) {
 	var k, v, j, tmp, out={};
 	sep = sep || '_';
 
@@ -7,9 +7,9 @@ function flatObj(obj, sep) {
 		if (v == null) {
 			continue;
 		} else if (Array.isArray(v)) {
-			out[k] = v.map(o => flatObj(o, sep));
+			out[k] = v.map(o => flatten(o, sep));
 		} else if (typeof v === 'object') {
-			tmp = flatObj(v, sep);
+			tmp = flatten(v, sep);
 			for (j in tmp) {
 				out[k + sep + j] = tmp[j];
 			}
@@ -17,7 +17,6 @@ function flatObj(obj, sep) {
 			out[k] = v;
 		}
 	}
+
 	return out;
 }
-
-module.exports = flatObj;
