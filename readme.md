@@ -1,4 +1,4 @@
-# flat-obj [![Build Status](https://travis-ci.org/lukeed/flat-obj.svg?branch=master)](https://travis-ci.org/lukeed/flat-obj)
+# flat-obj [![build status](https://badgen.net/github/status/lukeed/flat-obj)](https://github.com/lukeed/flat-obj/actions) [![codecov](https://badgen.now.sh/codecov/c/github/lukeed/flat-obj)](https://codecov.io/gh/lukeed/flat-obj)
 
 > A tiny (173B) utility to flatten an object with customizable glue
 
@@ -43,7 +43,7 @@ flatObj({
 ### flatObj(input, [glue])
 Returns: `Object`
 
-Returns a
+Returns a new object with a single level of depth.
 
 #### input
 Type: `Object`
