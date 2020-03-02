@@ -1,42 +1,54 @@
-const flat = require('flat');
-const Table = require('cli-table2');
+const assert = require('assert');
 const { Suite } = require('benchmark');
-const flattenObject = require('flatten-object');
-const flattenObjectStrict = require('flatten-object-strict');
-const previous = require('flat-obj');
-const qFlat = require('q-flat');
-const curr = require('../lib');
 
-const bench = new Suite();
+const contenders = {
+	'flat': require('flat'),
+	'flatten-object': require('flatten-object'),
+	'flat-obj@1.x': require('flat-obj'),
+	'flat-obj': require('../dist'),
+};
 
-const c = { a:4, b:null, c:123 };
-const b = { a:2, b:3, c, d:'foo' };
-const obj = { a:1, b, c:6, d:456 };
+console.log('Validation: ');
+Object.keys(contenders).forEach(name => {
+	try {
+		const c = { a:4, b:null, c:123 };
+		const b = { a:2, b:3, c, d:'foo' };
+		const obj = { a:1, b, c:6, d:456 };
 
-bench
-	.add('flat-obj', () => curr(obj))
-	.add('flat', () => flat(obj))
-	.add('flatten-object', () => flattenObject(obj))
-	.add('flat-obj (previous)', () => previous(obj))
-	.on('cycle', e => console.log(String(e.target)))
-	.on('complete', function() {
-		console.log('Fastest is ' + this.filter('fastest').map('name'));
+		const output = contenders[name](obj);
+		assert.notEqual(typeof output['b'], 'object');
+		assert.notDeepEqual(output, obj);
 
-		const tbl = new Table({
-			head: ['Name', 'Mean time', 'Ops/sec', 'Diff']
+		console.log('  ✔', name);
+	} catch (err) {
+		console.log('  ✘', name, `(FAILED)`);
+	}
+});
+
+
+console.log('\nBenchmark:');
+const bench = new Suite().on('cycle', e => {
+	console.log('  ' + e.target);
+});
+
+Object.keys(contenders).forEach(name => {
+	bench.add(name + ' '.repeat(18 - name.length), () => {
+		contenders[name]({
+			a: 1,
+			b: {
+				a: 2,
+				b: 3,
+				c: {
+					a: 4,
+					b: null,
+					c: [1, 2, 3],
+					d: 456
+				},
+				d: 'foo'
+			},
+			c: 456
 		});
-
-		let prev, diff;
-
-		bench.forEach(el => {
-			if (prev) {
-				diff = ((el.hz - prev) * 100 / prev).toFixed(2) + '% faster';
-			} else {
-				diff = 'N/A'
-			}
-			prev = el.hz;
-			tbl.push([el.name, el.stats.mean, el.hz.toLocaleString(), diff])
-		});
-		console.log(tbl.toString());
 	})
-	.run();
+});
+
+bench.run();
