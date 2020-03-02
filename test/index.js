@@ -121,7 +121,6 @@ test('object :: nested', t => {
 });
 
 
-
 test('object :: kitchen', t => {
 	let input = {
 		a: 1,
