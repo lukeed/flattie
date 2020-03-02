@@ -1,7 +1,10 @@
 # flat-obj [![Build Status](https://travis-ci.org/lukeed/flat-obj.svg?branch=master)](https://travis-ci.org/lukeed/flat-obj)
 
-> Flatten a nested Object with customizable glue
+> A tiny (173B) utility to flatten an object with customizable glue
 
+This module squashes a nested object (including its internal Arrays) so that the output is a flat object – AKA, it has a single level of depth. By default, the `_` character is used to glue/join layers' keys together. This is customizable, of course.
+
+Finally, any keys with nullish values (`null` and `undefined`) are **not** included in the return object.
 
 ## Install
 
@@ -37,9 +40,12 @@ flatObj({
 
 ## API
 
-### flatObj(obj, [glue])
+### flatObj(input, [glue])
+Returns: `Object`
 
-#### obj
+Returns a
+
+#### input
 Type: `Object`
 
 The object to flatten.
