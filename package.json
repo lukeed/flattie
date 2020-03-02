@@ -2,7 +2,7 @@
   "name": "flat-obj",
   "version": "2.2.0",
   "repository": "lukeed/flat-obj",
-  "description": "A tiny (173B) utility to flatten an object with customizable glue",
+  "description": "A tiny (188B) utility to flatten an object with customizable glue",
   "unpkg": "dist/index.min.js",
   "module": "dist/index.mjs",
   "main": "dist/index.js",
