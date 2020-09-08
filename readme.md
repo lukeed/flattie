@@ -89,17 +89,23 @@ flatObj({ foo }, '.'); //=> { 'foo.bar': 123 }
 > Running on Node.js v10.13.0
 
 ```
+Load Time:
+  flat             0.888ms
+  flatten-object   1.236ms
+  flat-obj         1.061ms
+  flattie          0.339ms
+
 Validation:
   ✔ flat
   ✔ flatten-object
-  ✔ flat-obj@1.x
   ✔ flat-obj
+  ✔ flattie
 
 Benchmark:
-  flat               x 186,002 ops/sec ±1.28% (89 runs sampled)
-  flatten-object     x 188,715 ops/sec ±0.22% (94 runs sampled)
-  flat-obj@1.x       x 274,414 ops/sec ±1.03% (95 runs sampled)
-  flat-obj           x 363,332 ops/sec ±0.57% (97 runs sampled)
+  flat               x 185,068 ops/sec ±1.45% (84 runs sampled)
+  flatten-object     x 207,216 ops/sec ±1.17% (93 runs sampled)
+  flat-obj           x 394,299 ops/sec ±0.85% (92 runs sampled)
+  flattie            x 897,705 ops/sec ±0.74% (93 runs sampled)
 ```
 
 
