@@ -1,6 +1,6 @@
 {
   "name": "flat-obj",
-  "version": "3.0.0",
+  "version": "0.0.0",
   "repository": "lukeed/flat-obj",
   "description": "A tiny (188B) utility to flatten an object with customizable glue",
   "unpkg": "dist/index.min.js",
@@ -32,7 +32,7 @@
     "flat"
   ],
   "devDependencies": {
-    "bundt": "1.0.0",
+    "bundt": "1.1.1",
     "esm": "3.2.25",
     "tap-spec": "5.0.0",
     "tape": "4.13.0"
