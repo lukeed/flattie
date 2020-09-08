@@ -90,10 +90,10 @@ flatObj({ foo }, '.'); //=> { 'foo.bar': 123 }
 
 ```
 Load Time:
-  flat             0.888ms
-  flatten-object   1.236ms
-  flat-obj         1.061ms
-  flattie          0.339ms
+  flat             1.004ms
+  flatten-object   1.223ms
+  flat-obj         0.971ms
+  flattie          0.239ms
 
 Validation:
   ✔ flat
@@ -102,10 +102,10 @@ Validation:
   ✔ flattie
 
 Benchmark:
-  flat               x 185,068 ops/sec ±1.45% (84 runs sampled)
-  flatten-object     x 207,216 ops/sec ±1.17% (93 runs sampled)
-  flat-obj           x 394,299 ops/sec ±0.85% (92 runs sampled)
-  flattie            x 897,705 ops/sec ±0.74% (93 runs sampled)
+  flat               x 183,670 ops/sec ±1.30% (86 runs sampled)
+  flatten-object     x 209,886 ops/sec ±0.32% (93 runs sampled)
+  flat-obj           x 383,326 ops/sec ±1.65% (89 runs sampled)
+  flattie            x 901,407 ops/sec ±0.72% (90 runs sampled)
 ```
 
 
