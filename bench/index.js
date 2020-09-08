@@ -1,14 +1,32 @@
-const assert = require('assert');
+const assert = require('uvu/assert');
 const { Suite } = require('benchmark');
 
+console.log('\nLoad Time: ');
+
+console.time('flat');
+const flat = require('flat');
+console.timeEnd('flat');
+
+console.time('flatten-object');
+const flattenObject = require('flatten-object');
+console.timeEnd('flatten-object');
+
+console.time('flat-obj');
+const flatObj = require('flat-obj');
+console.timeEnd('flat-obj');
+
+console.time('flattie');
+const { flattie } = require('../dist');
+console.timeEnd('flattie');
+
 const contenders = {
-	'flat': require('flat'),
-	'flatten-object': require('flatten-object'),
-	'flat-obj@1.x': require('flat-obj'),
-	'flat-obj': require('../dist'),
+	'flat': flat,
+	'flatten-object': flattenObject,
+	'flat-obj': flatObj,
+	'flattie': flattie,
 };
 
-console.log('Validation: ');
+console.log('\nValidation: ');
 Object.keys(contenders).forEach(name => {
 	try {
 		const c = { a:4, b:null, c:123 };
@@ -16,8 +34,8 @@ Object.keys(contenders).forEach(name => {
 		const obj = { a:1, b, c:6, d:456 };
 
 		const output = contenders[name](obj);
-		assert.notEqual(typeof output['b'], 'object');
-		assert.notDeepEqual(output, obj);
+		assert.not.type(output['b'], 'object');
+		assert.not.equal(output, obj);
 
 		console.log('  ✔', name);
 	} catch (err) {

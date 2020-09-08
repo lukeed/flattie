@@ -1,8 +1,8 @@
 {
   "devDependencies": {
     "benchmark": "2.1.4",
-    "flat": "5.0.0",
-    "flat-obj": "^1.0.0",
+    "flat": "5.0.2",
+    "flat-obj": "3.0.0",
     "flatten-object": "1.2.0"
   }
 }
