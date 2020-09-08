@@ -17,6 +17,6 @@ function iter(output, sep, val, key) {
 
 export function flattie(input, sep) {
 	var output = {};
-	if (typeof input == 'object') iter(output, sep || '_', input, '');
+	if (typeof input == 'object') iter(output, sep || '.', input, '');
 	return output;
 }
