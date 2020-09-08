@@ -1,9 +1,9 @@
 import { test } from 'uvu';
 import * as assert from 'uvu/assert';
-import flat from '../src';
+import { flattie } from '../src';
 
 test('exports', () => {
-	assert.is(typeof flat, 'function', 'exports a function');
+	assert.is(typeof flattie, 'function', 'exports a function');
 });
 
 
@@ -12,7 +12,7 @@ test('custom glue', () => {
 	let input = { aaa: 1, bbb: 2, ccc, ddd: 4 };
 
 	assert.equal(
-		flat(input, 'FOO'), {
+		flattie(input, 'FOO'), {
 			aaa: 1,
 			bbb: 2,
 			cccFOOfoo: 'bar',
@@ -22,7 +22,7 @@ test('custom glue', () => {
 	);
 
 	assert.equal(
-		flat(input, '~'), {
+		flattie(input, '~'), {
 			'aaa': 1,
 			'bbb': 2,
 			'ccc~foo': 'bar',
@@ -40,7 +40,7 @@ test('ignore nullish', () => {
 	let input = { aaa: 123, bbb, ccc: null, ddd };
 
 	assert.equal(
-		flat(input), {
+		flattie(input), {
 			aaa: 123,
 			bbb_ccc: '',
 			bbb_ddd: 'hi',
@@ -53,14 +53,14 @@ test('ignore nullish', () => {
 
 
 test('plain types', () => {
-	assert.equal(flat(1), {});
-	assert.equal(flat(0), {});
+	assert.equal(flattie(1), {});
+	assert.equal(flattie(0), {});
 
-	assert.equal(flat(null), {});
-	assert.equal(flat(undefined), {});
+	assert.equal(flattie(null), {});
+	assert.equal(flattie(undefined), {});
 
-	assert.equal(flat(''), {});
-	assert.equal(flat('hello'), {});
+	assert.equal(flattie(''), {});
+	assert.equal(flattie('hello'), {});
 
 });
 
@@ -71,7 +71,7 @@ test('object :: simple', () => {
 	let input_string = JSON.stringify(input);
 
 	assert.equal(
-		flat(input), {
+		flattie(input), {
 			aaa: 1,
 			bbb: 2,
 			ccc_foo: 'bar',
@@ -96,7 +96,7 @@ test('object :: nested', () => {
 	let input_string = JSON.stringify(input);
 
 	assert.equal(
-		flat(input), {
+		flattie(input), {
 			aaa: 1,
 			bbb_aaa: 2,
 			bbb_bbb: 3,
@@ -134,7 +134,7 @@ test('object :: kitchen', () => {
 	let input_string = JSON.stringify(input);
 
 	assert.equal(
-		flat(input), {
+		flattie(input), {
 			a: 1,
 
 			b_0_0_a: 1,
@@ -195,7 +195,7 @@ test('array :: simple', () => {
 	const input_string = JSON.stringify(input);
 
 	assert.equal(
-		flat(input), {
+		flattie(input), {
 			0: 0,
 			4: 1,
 			5: 2,
@@ -223,7 +223,7 @@ test('array :: nested', () => {
 	const input_string = JSON.stringify(input);
 
 	assert.equal(
-		flat(input), {
+		flattie(input), {
 			'0_0': 1,
 			'0_1': 2,
 			'0_3': 3,
@@ -262,7 +262,7 @@ test('array :: object', () => {
 	let input_string = JSON.stringify(input);
 
 	assert.equal(
-		flat(input), {
+		flattie(input), {
 			'0_aaa': 1,
 			'0_bbb_foo': 123,
 			'0_bbb_bar': 456,
@@ -287,7 +287,7 @@ test('array :: object', () => {
 	);
 
 	assert.equal(
-		flat(input, '.'), {
+		flattie(input, '.'), {
 			'0.aaa': 1,
 			'0.bbb.foo': 123,
 			'0.bbb.bar': 456,
@@ -357,7 +357,7 @@ test('array :: kitchen', () => {
 	let input_string = JSON.stringify(input);
 
 	assert.equal(
-		flat(input), {
+		flattie(input), {
 			'0': 'hello',
 
 			'1_a': 1,
