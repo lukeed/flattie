@@ -1,4 +1,4 @@
-export default function flatten(obj, sep) {
+export function flattie(obj, sep) {
 	var k, v, j, tmp, out={};
 	sep = sep || '_';
 
@@ -7,7 +7,7 @@ export default function flatten(obj, sep) {
 			v = obj[k];
 			if (v == null) {
 			} else if (typeof v == 'object') {
-				tmp = flatten(v, sep);
+				tmp = flattie(v, sep);
 				for (j in tmp) out[k + sep + j] = tmp[j];
 			} else {
 				out[k] = v;
@@ -18,7 +18,7 @@ export default function flatten(obj, sep) {
 			v = obj[k];
 			if (v == null) {
 			} else if (typeof v == 'object') {
-				tmp = flatten(v, sep);
+				tmp = flattie(v, sep);
 				for (j in tmp) out[k + sep + j] = tmp[j];
 			} else {
 				out[k] = v;

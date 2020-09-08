@@ -1,1 +1,1 @@
-export default function<X=Record<string, any>, Y=unknown>(input: Y, glue?: string): X;
+export function flattie<X=Record<string, any>, Y=unknown>(input: Y, glue?: string): X;
