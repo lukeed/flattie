@@ -1,30 +1,22 @@
-export function flattie(obj, sep) {
-	var k, v, j, tmp, out={};
-	sep = sep || '_';
+function iter(output, sep, val, key) {
+	var k, pfx = key ? (key + sep) : key;
 
-	if (Array.isArray(obj)) {
-		for (k=0; k < obj.length; k++) {
-			v = obj[k];
-			if (v == null) {
-			} else if (typeof v == 'object') {
-				tmp = flattie(v, sep);
-				for (j in tmp) out[k + sep + j] = tmp[j];
-			} else {
-				out[k] = v;
-			}
+	if (val == null) {
+	} else if (Array.isArray(val)) {
+		for (k=0; k < val.length; k++) {
+			iter(output, sep, val[k], pfx + k);
 		}
-	} else if (typeof obj == 'object') {
-		for (k in obj) {
-			v = obj[k];
-			if (v == null) {
-			} else if (typeof v == 'object') {
-				tmp = flattie(v, sep);
-				for (j in tmp) out[k + sep + j] = tmp[j];
-			} else {
-				out[k] = v;
-			}
+	} else if (typeof val == 'object') {
+		for (k in val) {
+			iter(output, sep, val[k], pfx + k);
 		}
+	} else {
+		output[key] = val;
 	}
+}
 
-	return out;
+export function flattie(input, sep) {
+	var output = {};
+	if (typeof input == 'object') iter(output, sep || '_', input, '');
+	return output;
 }
