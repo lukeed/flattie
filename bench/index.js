@@ -31,10 +31,11 @@ Object.keys(contenders).forEach(name => {
 	try {
 		const c = { a:4, b:null, c:123 };
 		const b = { a:2, b:3, c, d:'foo' };
-		const obj = { a:1, b, c:6, d:456 };
+		const obj = { a:1, b, c:6, d:456, e:[1,2,3] };
 
 		const output = contenders[name](obj);
 		assert.not.type(output['b'], 'object');
+		assert.not.instance(output['e'], Array);
 		assert.not.equal(output, obj);
 
 		console.log('  ✔', name);
