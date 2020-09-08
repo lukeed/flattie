@@ -33,6 +33,7 @@
     "test": "uvu -r esm test"
   },
   "keywords": [
+    "keys",
     "flatten",
     "object",
     "nested",
