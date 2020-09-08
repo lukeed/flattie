@@ -1,24 +1,26 @@
-# flat-obj [![build status](https://badgen.net/github/status/lukeed/flat-obj)](https://github.com/lukeed/flat-obj/actions) [![codecov](https://badgen.now.sh/codecov/c/github/lukeed/flat-obj)](https://codecov.io/gh/lukeed/flat-obj)
+# flattie [![build status](https://badgen.net/github/status/lukeed/flattie)](https://github.com/lukeed/flattie/actions) [![codecov](https://badgen.now.sh/codecov/c/github/lukeed/flattie)](https://codecov.io/gh/lukeed/flattie)
 
 > A tiny (187B) utility to flatten an object with customizable glue
 
-This module squashes a nested object (including its internal Arrays) so that the output is a flat object – AKA, it has a single level of depth. By default, the `_` character is used to glue/join layers' keys together. This is customizable, of course.
+This module recursively squashes an Object/Array. The output is a flat object – AKA, it has a single level of depth.
+
+By default, the `.` character is used to glue/join layers' keys together. This is customizable.
 
 Finally, any keys with nullish values (`null` and `undefined`) are **not** included in the return object.
 
 ## Install
 
 ```
-$ npm install --save flat-obj
+$ npm install --save flattie
 ```
 
 
 ## Usage
 
 ```js
-import flatObj from 'flat-obj';
+import { flattie } from 'flattie';
 
-flatObj({
+flattie({
   a: 'hi',
   b: {
     a: null,
@@ -38,19 +40,19 @@ flatObj({
   c: 'world'
 });
 // {
-//   a: 'hi',
-//   b_b_0: 'foo',
-//   b_b_1: '',
-//   b_b_3: 'bar',
-//   b_d: 'hello',
-//   b_e_a: 'yo',
-//   b_e_c: 'sup',
-//   b_e_d: 0,
-//   b_e_f_0_foo: 123,
-//   b_e_f_0_bar: 123,
-//   b_e_f_1_foo: 465,
-//   b_e_f_1_bar: 456,
-//   c: 'world'
+//   'a': 'hi',
+//   'b.b.0': 'foo',
+//   'b.b.1': '',
+//   'b.b.3': 'bar',
+//   'b.d': 'hello',
+//   'b.e.a': 'yo',
+//   'b.e.c': 'sup',
+//   'b.e.d': 0,
+//   'b.e.f.0.foo': 123,
+//   'b.e.f.0.bar': 123,
+//   'b.e.f.1.foo': 465,
+//   'b.e.f.1.bar': 456,
+//   'c': 'world'
 // }
 ```
 
@@ -58,7 +60,7 @@ flatObj({
 
 ## API
 
-### flatObj(input, [glue])
+### flattie(input, glue?)
 Returns: `Object`
 
 Returns a new object with a single level of depth.
@@ -72,15 +74,15 @@ The object to flatten.
 
 #### glue
 Type: `String`<br>
-Default: `_`
+Default: `.`
 
 A string used to join parent key names to nested child key names.
 
 ```js
 const foo = { bar: 123 };
 
-flatObj({ foo }); //=> { foo_bar: 123 }
-flatObj({ foo }, '.'); //=> { 'foo.bar': 123 }
+flattie({ foo }); //=> { 'foo.bar': 123 }
+flattie({ foo }, '???'); //=> { 'foo???bar': 123 }
 ```
 
 
