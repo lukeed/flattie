@@ -1,6 +1,6 @@
 # flat-obj [![build status](https://badgen.net/github/status/lukeed/flat-obj)](https://github.com/lukeed/flat-obj/actions) [![codecov](https://badgen.now.sh/codecov/c/github/lukeed/flat-obj)](https://codecov.io/gh/lukeed/flat-obj)
 
-> A tiny (185B) utility to flatten an object with customizable glue
+> A tiny (187B) utility to flatten an object with customizable glue
 
 This module squashes a nested object (including its internal Arrays) so that the output is a flat object – AKA, it has a single level of depth. By default, the `_` character is used to glue/join layers' keys together. This is customizable, of course.
 
