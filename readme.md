@@ -1,6 +1,6 @@
 # flattie [![build status](https://badgen.net/github/status/lukeed/flattie)](https://github.com/lukeed/flattie/actions) [![codecov](https://badgen.now.sh/codecov/c/github/lukeed/flattie)](https://codecov.io/gh/lukeed/flattie)
 
-> A tiny (187B) utility to flatten an object with customizable glue
+> A tiny (187B) and [fast](#benchmarks) utility to flatten an object with customizable glue
 
 This module recursively squashes an Object/Array. The output is a flat object – AKA, it has a single level of depth.
 
