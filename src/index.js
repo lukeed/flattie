@@ -5,9 +5,10 @@ function iter(output, sep, val, key) {
 	} else if (typeof val != 'object') {
 		output[key] = val;
 	} else if (Array.isArray(val)) {
-		for (k=0; k < val.length; k++) {
-			iter(output, sep, val[k], pfx + k);
-		}
+		let index = val.length;
+    while (index--) {
+      iter(output, sep, val[index], pfx + index);
+    }
 	} else {
 		for (k in val) {
 			iter(output, sep, val[k], pfx + k);
