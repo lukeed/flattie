@@ -1,17 +1,17 @@
-import test from 'tape';
+import { test } from 'uvu';
+import * as assert from 'uvu/assert';
 import flat from '../src';
 
-test('exports', t => {
-	t.is(typeof flat, 'function', 'exports a function');
-	t.end();
+test('exports', () => {
+	assert.is(typeof flat, 'function', 'exports a function');
 });
 
 
-test('custom glue', t => {
+test('custom glue', () => {
 	let ccc = { foo: 'bar', baz: 'bat' };
 	let input = { aaa: 1, bbb: 2, ccc, ddd: 4 };
 
-	t.deepEqual(
+	assert.equal(
 		flat(input, 'FOO'), {
 			aaa: 1,
 			bbb: 2,
@@ -21,7 +21,7 @@ test('custom glue', t => {
 		}
 	);
 
-	t.deepEqual(
+	assert.equal(
 		flat(input, '~'), {
 			'aaa': 1,
 			'bbb': 2,
@@ -31,16 +31,15 @@ test('custom glue', t => {
 		}
 	);
 
-	t.end();
 });
 
 
-test('ignore nullish', t => {
+test('ignore nullish', () => {
 	let ddd = [, null, undefined, 0, 1];
 	let bbb = { aaa: null, bbb: undefined, ccc: '', ddd: 'hi', eee: 0 };
 	let input = { aaa: 123, bbb, ccc: null, ddd };
 
-	t.deepEqual(
+	assert.equal(
 		flat(input), {
 			aaa: 123,
 			bbb_ccc: '',
@@ -50,31 +49,28 @@ test('ignore nullish', t => {
 			ddd_4: 1,
 		}
 	);
-
-	t.end();
 });
 
 
-test('plain types', t => {
-	t.deepEqual(flat(1), {});
-	t.deepEqual(flat(0), {});
+test('plain types', () => {
+	assert.equal(flat(1), {});
+	assert.equal(flat(0), {});
 
-	t.deepEqual(flat(null), {});
-	t.deepEqual(flat(undefined), {});
+	assert.equal(flat(null), {});
+	assert.equal(flat(undefined), {});
 
-	t.deepEqual(flat(''), {});
-	t.deepEqual(flat('hello'), {});
+	assert.equal(flat(''), {});
+	assert.equal(flat('hello'), {});
 
-	t.end();
 });
 
 
-test('object :: simple', t => {
+test('object :: simple', () => {
 	let ccc = { foo: 'bar', baz: 'bat' };
 	let input = { aaa: 1, bbb: 2, ccc, ddd: 4 };
 	let input_string = JSON.stringify(input);
 
-	t.deepEqual(
+	assert.equal(
 		flat(input), {
 			aaa: 1,
 			bbb: 2,
@@ -84,23 +80,22 @@ test('object :: simple', t => {
 		}
 	);
 
-	t.deepEqual(
+	assert.equal(
 		input_string,
 		JSON.stringify(input)
 	);
 
-	t.end();
 });
 
 
-test('object :: nested', t => {
+test('object :: nested', () => {
 	let ccc = { foo: 'bar', baz: 'bat' };
 	let bbb = { aaa: 2, bbb: 3, ccc, ddd: 4 }
 	let input = { aaa: 1, bbb, ccc: 3 };
 
 	let input_string = JSON.stringify(input);
 
-	t.deepEqual(
+	assert.equal(
 		flat(input), {
 			aaa: 1,
 			bbb_aaa: 2,
@@ -112,16 +107,15 @@ test('object :: nested', t => {
 		}
 	);
 
-	t.deepEqual(
+	assert.equal(
 		input_string,
 		JSON.stringify(input)
 	);
 
-	t.end();
 });
 
 
-test('object :: kitchen', t => {
+test('object :: kitchen', () => {
 	let input = {
 		a: 1,
 		b: [
@@ -139,7 +133,7 @@ test('object :: kitchen', t => {
 
 	let input_string = JSON.stringify(input);
 
-	t.deepEqual(
+	assert.equal(
 		flat(input), {
 			a: 1,
 
@@ -187,21 +181,20 @@ test('object :: kitchen', t => {
 		}
 	);
 
-	t.deepEqual(
+	assert.equal(
 		input_string,
 		JSON.stringify(input),
 		'~> no input mutation'
 	);
 
-	t.end();
 });
 
 
-test('array :: simple', t => {
+test('array :: simple', () => {
 	const input = [0, , null, undefined, 1, 2, '', 3];
 	const input_string = JSON.stringify(input);
 
-	t.deepEqual(
+	assert.equal(
 		flat(input), {
 			0: 0,
 			4: 1,
@@ -211,17 +204,16 @@ test('array :: simple', t => {
 		}
 	);
 
-	t.deepEqual(
+	assert.equal(
 		input_string,
 		JSON.stringify(input),
 		'~> no input mutation'
 	);
 
-	t.end();
 });
 
 
-test('array :: nested', t => {
+test('array :: nested', () => {
 	const input = [
 		[1, 2, null, 3, 4],
 		['foo', 'bar', ['hello', null, 'world'], 'baz'],
@@ -230,7 +222,7 @@ test('array :: nested', t => {
 
 	const input_string = JSON.stringify(input);
 
-	t.deepEqual(
+	assert.equal(
 		flat(input), {
 			'0_0': 1,
 			'0_1': 2,
@@ -248,17 +240,16 @@ test('array :: nested', t => {
 		}
 	);
 
-	t.deepEqual(
+	assert.equal(
 		input_string,
 		JSON.stringify(input),
 		'~> no input mutation'
 	);
 
-	t.end();
 });
 
 
-test('array :: object', t => {
+test('array :: object', () => {
 	let baz = ['hello', null, 'world'];
 	let bbb = { foo: 123, bar: 456, baz };
 
@@ -270,7 +261,7 @@ test('array :: object', t => {
 
 	let input_string = JSON.stringify(input);
 
-	t.deepEqual(
+	assert.equal(
 		flat(input), {
 			'0_aaa': 1,
 			'0_bbb_foo': 123,
@@ -295,7 +286,7 @@ test('array :: object', t => {
 		}
 	);
 
-	t.deepEqual(
+	assert.equal(
 		flat(input, '.'), {
 			'0.aaa': 1,
 			'0.bbb.foo': 123,
@@ -320,17 +311,16 @@ test('array :: object', t => {
 		}
 	);
 
-	t.deepEqual(
+	assert.equal(
 		input_string,
 		JSON.stringify(input),
 		'~> no input mutation'
 	);
 
-	t.end();
 });
 
 
-test('array :: kitchen', t => {
+test('array :: kitchen', () => {
 	let input = [
 		'hello',
 		{
@@ -366,7 +356,7 @@ test('array :: kitchen', t => {
 
 	let input_string = JSON.stringify(input);
 
-	t.deepEqual(
+	assert.equal(
 		flat(input), {
 			'0': 'hello',
 
@@ -450,11 +440,11 @@ test('array :: kitchen', t => {
 		}
 	);
 
-	t.deepEqual(
+	assert.equal(
 		input_string,
 		JSON.stringify(input),
 		'~> no input mutation'
 	);
-
-	t.end();
 });
+
+test.run();

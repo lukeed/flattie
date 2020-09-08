@@ -23,7 +23,7 @@
   "scripts": {
     "build": "bundt",
     "bench": "node bench",
-    "test": "tape -r esm test/*.js | tap-spec"
+    "test": "uvu -r esm test"
   },
   "keywords": [
     "flatten",
@@ -34,7 +34,6 @@
   "devDependencies": {
     "bundt": "1.1.1",
     "esm": "3.2.25",
-    "tap-spec": "5.0.0",
-    "tape": "4.13.0"
+    "uvu": "0.3.3"
   }
 }
