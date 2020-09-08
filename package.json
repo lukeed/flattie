@@ -25,7 +25,7 @@
     "dist"
   ],
   "engines": {
-    "node": ">= 4"
+    "node": ">=8"
   },
   "scripts": {
     "build": "bundt",
