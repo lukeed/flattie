@@ -45,14 +45,14 @@ jobs:
 
     - name: Test
       run: npm test
-      if: matrix.nodejs < 12
+      if: matrix.nodejs < 14
 
     - name: (coverage) Test
       run: c8 --include=src npm test
-      if: matrix.nodejs >= 12
+      if: matrix.nodejs >= 14
 
     - name: (coverage) Report
-      if: matrix.nodejs >= 12
+      if: matrix.nodejs >= 14
       run: |
         c8 report --reporter=text-lcov > coverage.lcov
         bash <(curl -s https://codecov.io/bash)
