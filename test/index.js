@@ -41,12 +41,33 @@ test('ignore nullish', () => {
 	assert.equal(
 		flattie(input), {
 			'aaa': 123,
+			'bbb.ccc': '',
+			'bbb.ddd': 'hi',
+			'bbb.eee': 0,
+			'ddd.3': 0,
+			'ddd.4': NaN,
+			'ddd.5': 1,
+		}
+	);
+});
+
+test('keep nullish', () => {
+	let ddd = [, null, undefined, 0, NaN, 1];
+	let bbb = { aaa: null, bbb: undefined, ccc: '', ddd: 'hi', eee: 0 };
+	let input = { aaa: 123, bbb, ccc: null, ddd };
+
+	assert.equal(
+		flattie(input, '.', true), {
+			'aaa': 123,
 			'bbb.aaa': null,
+			'bbb.bbb': undefined,
 			'bbb.ccc': '',
 			'bbb.ddd': 'hi',
 			'bbb.eee': 0,
 			'ccc': null,
+			'ddd.0': undefined,
 			'ddd.1': null,
+			'ddd.2': undefined,
 			'ddd.3': 0,
 			'ddd.4': NaN,
 			'ddd.5': 1,
@@ -123,7 +144,7 @@ test('object :: kitchen', () => {
 		a: 1,
 		b: [
 			[{ a:1, b:[2,null,9], c:{ a:[1], b: { foo: [2, 2] } }, d:4 }],
-			[{ a:2, b:[4,undefined,9], c:{ a:[2], b: { foo: [4, 4] } }, d:5 }],
+			[{ a:2, b:[4,null,9], c:{ a:[2], b: { foo: [4, 4] } }, d:5 }],
 			[{ a:3, b:[6,null,9], c:{ a:[4], b: { foo: [8, 8] } }, d:6 }],
 		],
 		c: 3,
@@ -142,7 +163,6 @@ test('object :: kitchen', () => {
 
 			'b.0.0.a': 1,
 			'b.0.0.b.0': 2,
-			'b.0.0.b.1': null,
 			'b.0.0.b.2': 9,
 			'b.0.0.c.a.0': 1,
 			'b.0.0.c.b.foo.0': 2,
@@ -159,7 +179,6 @@ test('object :: kitchen', () => {
 
 			'b.2.0.a': 3,
 			'b.2.0.b.0': 6,
-			'b.2.0.b.1': null,
 			'b.2.0.b.2': 9,
 			'b.2.0.c.a.0': 4,
 			'b.2.0.c.b.foo.0': 8,
@@ -201,7 +220,6 @@ test('array :: simple', () => {
 	assert.equal(
 		flattie(input), {
 			0: 0,
-			2: null,
 			4: 1,
 			5: 2,
 			6: '',
@@ -231,13 +249,11 @@ test('array :: nested', () => {
 		flattie(input), {
 			'0.0': 1,
 			'0.1': 2,
-			'0.2': null,
 			'0.3': 3,
 			'0.4': 4,
 			'1.0': 'foo',
 			'1.1': 'bar',
 			'1.2.0': 'hello',
-			'1.2.1': null,
 			'1.2.3': 'world',
 			'1.3': 'baz',
 			'2.0': 6,
@@ -274,7 +290,6 @@ test('array :: object', () => {
 			'0.bbb.bar': 456,
 			'0.bbb.baz.0': 'hello',
 			'0.bbb.baz.2': 'world',
-			'0.bbb.baz.3': null,
 			'0.ccc.0': 4,
 			'0.ccc.1': 5,
 
@@ -283,15 +298,12 @@ test('array :: object', () => {
 			'1.bbb.bar': 456,
 			'1.bbb.baz.0': 'hello',
 			'1.bbb.baz.2': 'world',
-			'1.bbb.baz.3': null,
-			'1.ccc.0': null,
 
 			'2.aaa': 3,
 			'2.bbb.foo': 123,
 			'2.bbb.bar': 456,
 			'2.bbb.baz.0': 'hello',
 			'2.bbb.baz.2': 'world',
-			'2.bbb.baz.3': null,
 			'2.ccc.0': 9999,
 		}
 	);
@@ -303,7 +315,6 @@ test('array :: object', () => {
 			'0~bbb~bar': 456,
 			'0~bbb~baz~0': 'hello',
 			'0~bbb~baz~2': 'world',
-			'0~bbb~baz~3': null,
 			'0~ccc~0': 4,
 			'0~ccc~1': 5,
 
@@ -312,15 +323,12 @@ test('array :: object', () => {
 			'1~bbb~bar': 456,
 			'1~bbb~baz~0': 'hello',
 			'1~bbb~baz~2': 'world',
-			'1~bbb~baz~3': null,
-			'1~ccc~0': null,
 
 			'2~aaa': 3,
 			'2~bbb~foo': 123,
 			'2~bbb~bar': 456,
 			'2~bbb~baz~0': 'hello',
 			'2~bbb~baz~2': 'world',
-			'2~bbb~baz~3': null,
 			'2~ccc~0': 9999,
 		}
 	);
@@ -340,7 +348,7 @@ test('array :: kitchen', () => {
 			a: 1,
 			b: [
 				[{ a:1, b:[2,null,9], c:{ a:[1], b: { foo: [2, 2] } }, d:4 }],
-				[{ a:2, b:[4,undefined,9], c:{ a:[2], b: { foo: [4, 4] } }, d:5 }],
+				[{ a:2, b:[4,null,9], c:{ a:[2], b: { foo: [4, 4] } }, d:5 }],
 				[{ a:3, b:[6,null,9], c:{ a:[4], b: { foo: [8, 8] } }, d:6 }],
 			],
 			c: 3,
@@ -355,7 +363,7 @@ test('array :: kitchen', () => {
 			a: 1,
 			b: [
 				[{ a:1, b:[2,null,9], c:{ a:[1], b: { foo: [2, 2] } }, d:4 }],
-				[{ a:2, b:[4,undefined,9], c:{ a:[2], b: { foo: [4, 4] } }, d:5 }],
+				[{ a:2, b:[4,null,9], c:{ a:[2], b: { foo: [4, 4] } }, d:5 }],
 				[{ a:3, b:[6,null,9], c:{ a:[4], b: { foo: [8, 8] } }, d:6 }],
 			],
 			c: 3,
@@ -376,7 +384,6 @@ test('array :: kitchen', () => {
 			'1.a': 1,
 			'1.b.0.0.a': 1,
 			'1.b.0.0.b.0': 2,
-			'1.b.0.0.b.1': null,
 			'1.b.0.0.b.2': 9,
 			'1.b.0.0.c.a.0': 1,
 			'1.b.0.0.c.b.foo.0': 2,
@@ -391,7 +398,6 @@ test('array :: kitchen', () => {
 			'1.b.1.0.d': 5,
 			'1.b.2.0.a': 3,
 			'1.b.2.0.b.0': 6,
-			'1.b.2.0.b.1': null,
 			'1.b.2.0.b.2': 9,
 			'1.b.2.0.c.a.0': 4,
 			'1.b.2.0.c.b.foo.0': 8,
@@ -418,7 +424,6 @@ test('array :: kitchen', () => {
 			'3.a': 1,
 			'3.b.0.0.a': 1,
 			'3.b.0.0.b.0': 2,
-			'3.b.0.0.b.1': null,
 			'3.b.0.0.b.2': 9,
 			'3.b.0.0.c.a.0': 1,
 			'3.b.0.0.c.b.foo.0': 2,
@@ -433,7 +438,6 @@ test('array :: kitchen', () => {
 			'3.b.1.0.d': 5,
 			'3.b.2.0.a': 3,
 			'3.b.2.0.b.0': 6,
-			'3.b.2.0.b.1': null,
 			'3.b.2.0.b.2': 9,
 			'3.b.2.0.c.a.0': 4,
 			'3.b.2.0.c.b.foo.0': 8,

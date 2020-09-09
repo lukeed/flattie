@@ -6,7 +6,7 @@ This module recursively squashes an Object/Array. The output is a flat object â€
 
 By default, the `.` character is used to glue/join layers' keys together. This is customizable.
 
-Finally, any keys with nullish values (`null` and `undefined`) are **not** included in the return object.
+Finally, by default, any keys with nullish values (`null` and `undefined`) are **not** included in the return object.
 
 ## Install
 
@@ -56,11 +56,11 @@ flattie({
 // }
 ```
 
-> **Note:** `null` and `undefined` values are purged.
+> **Note:** `null` and `undefined` values are purged by default.
 
 ## API
 
-### flattie(input, glue?)
+### flattie(input, glue?, keepNullish?)
 Returns: `Object`
 
 Returns a new object with a single level of depth.
@@ -85,6 +85,33 @@ flattie({ foo }); //=> { 'foo.bar': 123 }
 flattie({ foo }, '???'); //=> { 'foo???bar': 123 }
 ```
 
+#### keepNullish
+Type: `Boolean`<br>
+Default: `false`
+
+Whether or not `null` and `undefined` values should be kept.
+
+```js
+// Note: Applies to Objects too
+const foo = ['hello', null, NaN, undefined, /*hole*/, 'world'];
+
+flattie({ foo });
+//=> {
+//=>   'foo.0': 'hello',
+//=>   'foo.2': NaN,
+//=>   'foo.5': 'world'
+//=> }
+
+flattie({ foo }, '.', true);
+//=> {
+//=>   'foo.0': 'hello',
+//=>   'foo.1': null,
+//=>   'foo.2': NaN,
+//=>   'foo.3': undefined,
+//=>   'foo.4': undefined,
+//=>   'foo.5': 'world'
+//=> }
+```
 
 ## Benchmarks
 
