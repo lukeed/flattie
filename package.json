@@ -2,7 +2,7 @@
   "name": "flattie",
   "version": "1.0.0",
   "repository": "lukeed/flattie",
-  "description": "A tiny (187B) and fast utility to flatten an object with customizable glue",
+  "description": "A tiny (203B) and fast utility to flatten an object with customizable glue",
   "unpkg": "dist/index.min.js",
   "module": "dist/index.mjs",
   "main": "dist/index.js",
