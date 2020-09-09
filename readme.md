@@ -119,10 +119,10 @@ flattie({ foo }, '.', true);
 
 ```
 Load Time:
-  flat             1.004ms
-  flatten-object   1.223ms
-  flat-obj         0.971ms
-  flattie          0.239ms
+  flat             1.047ms
+  flatten-object   1.239ms
+  flat-obj         0.997ms
+  flattie          0.258ms
 
 Validation:
   ✔ flat
@@ -131,10 +131,10 @@ Validation:
   ✔ flattie
 
 Benchmark:
-  flat               x 183,670 ops/sec ±1.30% (86 runs sampled)
-  flatten-object     x 209,886 ops/sec ±0.32% (93 runs sampled)
-  flat-obj           x 383,326 ops/sec ±1.65% (89 runs sampled)
-  flattie            x 901,407 ops/sec ±0.72% (90 runs sampled)
+  flat               x 186,487 ops/sec ±1.28% (86 runs sampled)
+  flatten-object     x 199,476 ops/sec ±1.01% (93 runs sampled)
+  flat-obj           x 393,574 ops/sec ±1.41% (95 runs sampled)
+  flattie            x 909,734 ops/sec ±0.82% (93 runs sampled)
 ```
 
 
