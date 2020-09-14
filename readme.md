@@ -1,12 +1,12 @@
 # flattie [![CI](https://github.com/lukeed/flattie/workflows/CI/badge.svg)](https://github.com/lukeed/flattie/actions) [![codecov](https://badgen.now.sh/codecov/c/github/lukeed/flattie)](https://codecov.io/gh/lukeed/flattie)
 
-> A tiny (187B) and [fast](#benchmarks) utility to flatten an object with customizable glue
+> A tiny (203B) and [fast](#benchmarks) utility to flatten an object with customizable glue
 
 This module recursively squashes an Object/Array. The output is a flat object – AKA, it has a single level of depth.
 
 By default, the `.` character is used to glue/join layers' keys together. This is customizable.
 
-Finally, any keys with nullish values (`null` and `undefined`) are **not** included in the return object.
+Finally, by default, any keys with nullish values (`null` and `undefined`) are **not** included in the return object.
 
 ## Install
 
@@ -56,11 +56,11 @@ flattie({
 // }
 ```
 
-> **Note:** `null` and `undefined` values are purged.
+> **Note:** `null` and `undefined` values are purged by default.
 
 ## API
 
-### flattie(input, glue?)
+### flattie(input, glue?, keepNullish?)
 Returns: `Object`
 
 Returns a new object with a single level of depth.
@@ -85,6 +85,33 @@ flattie({ foo }); //=> { 'foo.bar': 123 }
 flattie({ foo }, '???'); //=> { 'foo???bar': 123 }
 ```
 
+#### keepNullish
+Type: `Boolean`<br>
+Default: `false`
+
+Whether or not `null` and `undefined` values should be kept.
+
+```js
+// Note: Applies to Objects too
+const foo = ['hello', null, NaN, undefined, /*hole*/, 'world'];
+
+flattie({ foo });
+//=> {
+//=>   'foo.0': 'hello',
+//=>   'foo.2': NaN,
+//=>   'foo.5': 'world'
+//=> }
+
+flattie({ foo }, '.', true);
+//=> {
+//=>   'foo.0': 'hello',
+//=>   'foo.1': null,
+//=>   'foo.2': NaN,
+//=>   'foo.3': undefined,
+//=>   'foo.4': undefined,
+//=>   'foo.5': 'world'
+//=> }
+```
 
 ## Benchmarks
 
@@ -92,10 +119,10 @@ flattie({ foo }, '???'); //=> { 'foo???bar': 123 }
 
 ```
 Load Time:
-  flat             1.004ms
-  flatten-object   1.223ms
-  flat-obj         0.971ms
-  flattie          0.239ms
+  flat             1.047ms
+  flatten-object   1.239ms
+  flat-obj         0.997ms
+  flattie          0.258ms
 
 Validation:
   ✔ flat
@@ -104,10 +131,10 @@ Validation:
   ✔ flattie
 
 Benchmark:
-  flat               x 183,670 ops/sec ±1.30% (86 runs sampled)
-  flatten-object     x 209,886 ops/sec ±0.32% (93 runs sampled)
-  flat-obj           x 383,326 ops/sec ±1.65% (89 runs sampled)
-  flattie            x 901,407 ops/sec ±0.72% (90 runs sampled)
+  flat               x 186,487 ops/sec ±1.28% (86 runs sampled)
+  flatten-object     x 199,476 ops/sec ±1.01% (93 runs sampled)
+  flat-obj           x 393,574 ops/sec ±1.41% (95 runs sampled)
+  flattie            x 909,734 ops/sec ±0.82% (93 runs sampled)
 ```
 
 

@@ -34,7 +34,7 @@ test('custom glue', () => {
 
 
 test('ignore nullish', () => {
-	let ddd = [, null, undefined, 0, 1];
+	let ddd = [, null, undefined, 0, NaN, 1];
 	let bbb = { aaa: null, bbb: undefined, ccc: '', ddd: 'hi', eee: 0 };
 	let input = { aaa: 123, bbb, ccc: null, ddd };
 
@@ -45,7 +45,32 @@ test('ignore nullish', () => {
 			'bbb.ddd': 'hi',
 			'bbb.eee': 0,
 			'ddd.3': 0,
-			'ddd.4': 1,
+			'ddd.4': NaN,
+			'ddd.5': 1,
+		}
+	);
+});
+
+test('keep nullish', () => {
+	let ddd = [, null, undefined, 0, NaN, 1];
+	let bbb = { aaa: null, bbb: undefined, ccc: '', ddd: 'hi', eee: 0 };
+	let input = { aaa: 123, bbb, ccc: null, ddd };
+
+	assert.equal(
+		flattie(input, '.', true), {
+			'aaa': 123,
+			'bbb.aaa': null,
+			'bbb.bbb': undefined,
+			'bbb.ccc': '',
+			'bbb.ddd': 'hi',
+			'bbb.eee': 0,
+			'ccc': null,
+			'ddd.0': undefined,
+			'ddd.1': null,
+			'ddd.2': undefined,
+			'ddd.3': 0,
+			'ddd.4': NaN,
+			'ddd.5': 1,
 		}
 	);
 });
@@ -57,6 +82,7 @@ test('plain types', () => {
 
 	assert.equal(flattie(null), {});
 	assert.equal(flattie(undefined), {});
+	assert.equal(flattie(NaN), {});
 
 	assert.equal(flattie(''), {});
 	assert.equal(flattie('hello'), {});
@@ -188,7 +214,7 @@ test('object :: kitchen', () => {
 
 
 test('array :: simple', () => {
-	const input = [0, , null, undefined, 1, 2, '', 3];
+	const input = [0, , null, undefined, 1, 2, '', 3, NaN];
 	const input_string = JSON.stringify(input);
 
 	assert.equal(
@@ -197,7 +223,8 @@ test('array :: simple', () => {
 			4: 1,
 			5: 2,
 			6: '',
-			7: 3
+			7: 3,
+			8: NaN
 		}
 	);
 
@@ -212,7 +239,7 @@ test('array :: simple', () => {
 test('array :: nested', () => {
 	const input = [
 		[1, 2, null, 3, 4],
-		['foo', 'bar', ['hello', null, 'world'], 'baz'],
+		['foo', 'bar', ['hello', null, undefined, 'world'], 'baz'],
 		[6, 7, 8, undefined, 9]
 	];
 
@@ -227,7 +254,7 @@ test('array :: nested', () => {
 			'1.0': 'foo',
 			'1.1': 'bar',
 			'1.2.0': 'hello',
-			'1.2.2': 'world',
+			'1.2.3': 'world',
 			'1.3': 'baz',
 			'2.0': 6,
 			'2.1': 7,
@@ -245,12 +272,12 @@ test('array :: nested', () => {
 
 
 test('array :: object', () => {
-	let baz = ['hello', null, 'world'];
+	let baz = ['hello', void 0, 'world', null];
 	let bbb = { foo: 123, bar: 456, baz };
 
 	let input = [
 		{ aaa: 1, bbb, ccc: [4, 5] },
-		{ aaa: 2, bbb, ccc: [null] },
+		{ aaa: 2, bbb, ccc: [null, undefined] },
 		{ aaa: 3, bbb, ccc: [9999] },
 	];
 
