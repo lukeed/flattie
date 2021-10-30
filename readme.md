@@ -138,6 +138,11 @@ Benchmark:
 ```
 
 
+## Related
+
+* [nestie](https://github.com/lukeed/nestie) – A tiny (242B) and fast utility to expand a flattened object <br>_This is `flattie`'s reverse / counterpart._
+
+
 ## License
 
 MIT © [Luke Edwards](https://lukeed.com)
