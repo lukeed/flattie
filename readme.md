@@ -6,6 +6,8 @@ This module recursively squashes an Object/Array. The output is a flat object â€
 
 By default, the `.` character is used to glue/join layers' keys together. This is customizable.
 
+Every flatten key can be customized using a custom transformer function.
+
 Finally, by default, any keys with nullish values (`null` and `undefined`) are **not** included in the return object.
 
 ## Install
@@ -60,7 +62,7 @@ flattie({
 
 ## API
 
-### flattie(input, glue?, keepNullish?)
+### flattie(input, glue?, keepNullish?, options?)
 Returns: `Object`
 
 Returns a new object with a single level of depth.
@@ -112,6 +114,80 @@ flattie({ foo }, '.', true);
 //=>   'foo.5': 'world'
 //=> }
 ```
+
+#### options
+Type: `Object`<br>
+Default: `{}`
+
+An object containing additional options for handlings/transformation applied during the flatting of the input.
+
+
+##### options.transformKey
+Type: `Function (pfx: string, key: string) => string`<br>
+Default: `undefined`
+
+Must be a function getting in input actual `pfx` and `key` which is flatting and returning a `string`.
+
+```js
+// Example flatting an object using snake case transformation.
+
+const foo = { aaa: { bbb: { ccc: 1 }}, bbb: 2, ccc, ddd: 4 };
+
+flattie(foo, '_', true, {
+  transformKey: (pfx, key) => key.toLowerCase()
+});
+//=> {
+//=>   'aaa_bbb_ccc': 1,
+//=>   'ccc_foo': 'bar',
+//=>   'ccc_baz': 'bat',
+//=>   'ddd': 4,
+//=>   'bbb': 2,
+//=> }
+
+// Example flatting an object using camel case transformation.
+
+const foo = { aaa: { bbb: { ccc: 1 }}, bbb: 2, ccc, ddd: 4 };
+
+flattie(foo, '.', true, {
+  transformKey: (pfx, key) => {
+					if(!pfx) { return key.toLowerCase() }
+					if (key.length == 1) { return key.toUpperCase() }
+					return key.slice(0, 1).toUpperCase() + key.slice(1, key.length).toLowerCase()
+			},
+});
+//=> {
+//=>   'aaa.Bbb.Ccc': 1,
+//=>   'ccc.Foo': 'bar',
+//=>   'ccc.Baz': 'bat',
+//=>   'ddd': 4,
+//=>   'bbb': 2,
+//=> }
+```
+
+
+##### options.allowGlueEmptyString
+Type: `Boolean`<br>
+Default: `false`
+
+Can be used to allow the `""` value as glue.
+
+```js
+// Example flatting an object using snake case transformation.
+
+const foo = { aaa: { bbb: { ccc: 1 }}, bbb: 2, ccc, ddd: 4 };
+
+flattie(foo, '', true, {
+  allowGlueEmptyString: true
+});
+//=> {
+//=>   'aaabbbccc': 1,
+//=>   'cccfoo': 'bar',
+//=>   'cccbaz': 'bat',
+//=>   'ddd': 4,
+//=>   'bbb': 2,
+//=> }
+```
+
 
 ## Benchmarks
 

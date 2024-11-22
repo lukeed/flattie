@@ -30,8 +30,17 @@ test('custom glue', () => {
 			'ddd': 4
 		}
 	);
-});
 
+	assert.equal(
+		flattie(input, '', true, { allowGlueEmptyString: true }), {
+			'aaa': 1,
+			'bbb': 2,
+			'cccfoo': 'bar',
+			'cccbaz': 'bat',
+			'ddd': 4
+		}
+	);
+})
 
 test('ignore nullish', () => {
 	let ddd = [, null, undefined, 0, NaN, 1];
@@ -380,7 +389,6 @@ test('array :: kitchen', () => {
 	assert.equal(
 		flattie(input), {
 			'0': 'hello',
-
 			'1.a': 1,
 			'1.b.0.0.a': 1,
 			'1.b.0.0.b.0': 2,
@@ -418,9 +426,7 @@ test('array :: kitchen', () => {
 			'1.d.baz.0.c.1.a': 3,
 			'1.d.baz.0.c.1.b.c': 5,
 			'1.d.baz.0.d': 5,
-
 			'2': 'world',
-
 			'3.a': 1,
 			'3.b.0.0.a': 1,
 			'3.b.0.0.b.0': 2,
@@ -467,5 +473,75 @@ test('array :: kitchen', () => {
 		'does not mutate original'
 	);
 });
+
+test('custom transformKey', () => {
+	let ccc = { foo: 'bar', baz: 'bat' };
+	let input = { aaa: { bbb: { ccc: 1 }}, bbb: 2, ccc, ddd: 4 };
+
+	assert.throws(
+		() => flattie(input, '', false, {
+			transformKey: 'true'
+		}), 'value of options.transformKey must be a function returning a string', 'transformKey isn\'t a function'
+	);
+	
+	assert.equal(
+			flattie(input, '', false, {
+				transformKey: (pfx, key) => {
+					if(!pfx) { return key.toLowerCase() }
+					if (key.length == 1) { return key.toUpperCase() }
+					return key.slice(0, 1).toUpperCase() + key.slice(1, key.length).toLowerCase()
+				},
+				allowGlueEmptyString: true,
+			}), {
+			"aaaBbbCcc": 1,
+			"cccFoo": "bar",
+			"cccBaz": "bat",
+			"ddd": 4,
+			"bbb": 2,
+		}, 'should match camel case transformation'
+	);
+	
+	
+	assert.equal(
+			flattie(input, '_', false, {
+				transformKey: (pfx, key) => key.toLowerCase()
+			}), {
+			"aaa_bbb_ccc": 1,
+			"ccc_foo": "bar",
+			"ccc_baz": "bat",
+			"ddd": 4,
+			"bbb": 2,
+		}, 'should match snake case transformation'
+	);
+	
+	assert.equal(
+			flattie(input, '-', false, {
+				transformKey: (pfx, key) => key.toLowerCase()
+			}), {
+			"aaa-bbb-ccc": 1,
+			"ccc-foo": "bar",
+			"ccc-baz": "bat",
+			"ddd": 4,
+			"bbb": 2,
+		}, 'should match kebab case transformation'
+	);
+	
+	assert.equal(
+		flattie(input, '', false, {
+				transformKey: (pfx, key) => {
+					if (key.length == 1) { return key.toUpperCase() }
+					return key.slice(0, 1).toUpperCase() + key.slice(1, key.length).toLowerCase()
+				},
+				allowGlueEmptyString: true
+			}), {
+			"AaaBbbCcc": 1,
+			"CccFoo": "bar",
+			"CccBaz": "bat",
+			"Ddd": 4,
+			"Bbb": 2,
+		}, 'should match pascal case transformation'
+	);
+});
+
 
 test.run();
