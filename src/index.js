@@ -1,5 +1,5 @@
-function iter(output, nullish, sep, val, key) {
-	var k, pfx = key ? (key + sep) : key;
+function iter(output, nullish, sep, val, key, root) {
+	var k, pfx = root ? key : (key + sep);
 
 	if (val == null) {
 		if (nullish) output[key] = val;
@@ -19,7 +19,7 @@ function iter(output, nullish, sep, val, key) {
 export function flattie(input, glue, toNull) {
 	var output = {};
 	if (typeof input == 'object') {
-		iter(output, !!toNull, glue || '.', input, '');
+		iter(output, !!toNull, glue || '.', input, '', true);
 	}
 	return output;
 }
