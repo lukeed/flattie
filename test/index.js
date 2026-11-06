@@ -468,4 +468,21 @@ test('array :: kitchen', () => {
 	);
 });
 
+test('object :: empty-string path segments', () => {
+	assert.equal(flattie({ '': { x: 1 } }), { '.x': 1 });
+	assert.equal(flattie({ '': { '': { x: 1 } } }), { '..x': 1 });
+	assert.equal(flattie({ a: { '': { x: 1 } } }), { 'a..x': 1 });
+	assert.equal(flattie({ '': 1, a: { '': 2 } }), { '': 1, 'a.': 2 });
+	assert.equal(flattie({ '': [1, { '': 2 }] }), { '.0': 1, '.1.': 2 });
+	assert.equal(flattie({ '': { x: 1 } }, '~'), { '~x': 1 });
+	assert.equal(flattie({ '': { x: null, y: undefined } }), {});
+	assert.equal(flattie({ '': { x: null, y: undefined } }, '.', true), {
+		'.x': null,
+		'.y': undefined,
+	});
+	assert.equal(flattie(null, '.', true), { '': null });
+	assert.equal(flattie([1, { x: 2 }]), { '0': 1, '1.x': 2 });
+	assert.equal(flattie(Object.create({ x: 1 })), { x: 1 });
+});
+
 test.run();
